@@ -30,7 +30,6 @@ class Node():
         ret += ')'
         return ret
 
-
 class BinaryTree():
     '''
     This class is relatively useless by itself,
@@ -42,20 +41,22 @@ class BinaryTree():
 
     def __init__(self, root=None):
         '''
-        My version of this function is slightly modified from the video notes.
-        I give the root variable a default value of None,
-        which allows us to create a BinaryTree that has no elements within it.
+         My version of this function is slightly modified from the video notes.
+         I give the root variable a default value of None,
+         which allows us to create a BinaryTree that has no elements within it.
         '''
         if root:
             self.root = Node(root)
         else:
             self.root = None
 
+
     def __str__(self):
         '''
         We can visualize a tree by visualizing its root node.
         '''
         return str(self.root)
+
 
     def print_tree(self, traversal_type):
         '''
@@ -66,50 +67,67 @@ class BinaryTree():
         as this will reduce the effort you need for debugging.
         '''
         if traversal_type == 'preorder':
-            return self.preorder_print(self.root, '')
+              return self.preorder_print(self.root, '')
         elif traversal_type == 'inorder':
-            return self.inorder_print(self.root, '')
+              return self.inorder_print(self.root, '')
         elif traversal_type == 'postorder':
             return self.postorder_print(self.root, '')
         else:
             raise ValueError('Traversal type ' + str(traversal_type) + ' is not supported.')
 
+
     def preorder_print(self, start, traversal):
         '''
-        FIXME: 
+        FIXME:
         Implement this function.
         The lecture notes videos provide the exact code you need.
         '''
+        if start:
+            traversal += (str(start.value) + "=")
+            traversal = self.preorder_print(start.left, traversal)
+            traversal = self.preorder_print(start.right, traversal)
+        return traversal
+
 
     def inorder_print(self, start, traversal):
         '''
-        FIXME: 
+        FIXME:
         Implement this function.
         The lecture notes videos provide the exact code you need.
         '''
+        if start:
+            traversal = self.inorder_print(start.left, traversal)
+            traversal += (str(start.value) + "-")
+            traversal = self.inorder_print(start.right, traversal)
+        return traversal
+
 
     def postorder_print(self, start, traversal):
+       '''
+       FIXME:
+       Implement this function.
+       The lecture notes videos provide the exact code you need.
         '''
-        FIXME: 
-        Implement this function.
-        The lecture notes videos provide the exact code you need.
-        '''
+        if start:
+            traversal = self.postorder_print(start.left, traversal)
+            traversal = self.postorder_print(start.right, traversal)
+            traversal += (str(start.value) + "-")
+        return traversal
 
 
     def to_list(self, traversal_type):
-        '''
-        This function is similar to the print_tree function,
-        but instead of printing the tree,
-        it returns the contents of the tree as a list.
-
-        A general programming principle is that a function should return its results 
-        rather than print them whenever possible.
-        If a function returns its results,
-        we can always print the returned results if we need to visualize them.
-        But by returning the results we can also do more computations on the results if needed.
-        Many of the test cases for more complicated tree functions rely on this to_list function,
-        so it is import to implement it correctly.
-        '''
+         '''
+            This function is similar to the print_tree function,
+            but instead of printing the tree,
+            it returns the contents of the tree as a list.
+            A general programming principle is that a function should return its results
+            rather than print them whenever possible.
+            If a function returns its results,
+            we can always print the returned results if we need to visualize them.
+            But by returning the results we can also do more computations on the results if needed.
+            Many of the test cases for more complicated tree functions rely on this to_list function,
+            so it is import to implement it correctly.
+            '''
         if traversal_type == 'preorder':
             return self.preorder(self.root, [])
         elif traversal_type == 'inorder':
@@ -119,23 +137,41 @@ class BinaryTree():
         else:
             raise ValueError('traversal_type=' + str(traversal_type) + ' is not supported.')
 
+
     def preorder(self, start, traversal):
         '''
         FIXME:
         Implement this function by modifying the _print functions above.
         '''
+        if start:
+            traversal += (str(start.value) + "=")
+            traversal = self.preorder(self.left, traversal)
+            traversal = self.preorder(self.right, traversal)
+        return traversal
+
 
     def inorder(self, start, traversal):
         '''
         FIXME:
         Implement this function by modifying the _print functions above.
         '''
+        if start:
+            traversal = self.inorder(self.left, traversal)
+            traversal += (str(start.value) + "-")
+            traversal = self.inorder(self.right, traversal)
+        return traversal
+
 
     def postorder(self, start, traversal):
         '''
         FIXME:
         Implement this function by modifying the _print functions above.
         '''
+        if start:
+            traversal = self.postorder(self.left, traversal)
+            traversal = self.postorder(self.right, traversal)
+            traversal += (str(start.value) + "-")
+        return traversal
 
     def __len__(self):
         '''
@@ -147,12 +183,30 @@ class BinaryTree():
         '''
         return self.size_(self.root)
 
+
     def size(self):
         '''
         FIXME:
-        Implement this function. 
+        Implement this function.
         The lecture notes videos provide the exact code you need.
         '''
+        if self.root is None:
+            return 0
+
+        stack = Stack()
+        stack.push(self.root)
+        size = 1
+
+        while stack:
+            node = stack.pop()
+            if node.left:
+                size += 1
+                stack.push(node.left)
+            if node.right:
+                size += 1
+                stack.push(node.right)
+
+        return size
 
     def size_(self, node):
         '''
@@ -160,19 +214,28 @@ class BinaryTree():
         Implement this function.
         The lecture notes videos provide the exact code you need.
         '''
+        if node == None:
+            return 0
+
+        return 1 + self.size(node.left) + self.size(node.right)
 
     def height(self):
         return BinaryTree._height(self.root)
 
     @staticmethod
-    def _height(node):
+    def _height(hght, right, left):
         '''
         FIXME:
-        Implement this function. 
-
+        Implement this function.
         The lecture notes videos provide (almost) the exact code you need.
         In the video, the function is not implemented as a static function,
         and so the self argument is passed in as the first argument of height.
         This makes it inconvenient to use,
         and so you should implement it as a static method.
         '''
+        if node is None:
+            return -1
+
+        return 1 + max(hght.left,hght.right)
+
+
